@@ -15,7 +15,11 @@ public class Student {
     public String GetDate() {return Date;}
 
     public String ToString() {
-        return Name + " " + Integer.toString(Age) + " " + Date;
+        if (Name.equals("Parse Error") || Age == -1 || Date.isEmpty()) {
+            return "Nieprawidłowy format";
+        } else {
+            return Name + " " + Integer.toString(Age) + " " + Date;
+        }
     }
 
     public static Student Parse(String str) {
@@ -25,3 +29,10 @@ public class Student {
         return new Student(data[0], Integer.parseInt(data[1]), data[2]);
     }
 }
+
+public String ToString() {
+    if (Name.equals("Parse Error") || Age == -1 || Date.isEmpty()) {
+        return "Nieprawidłowy format";
+    } else {
+        return Name + " " + Integer.toString(Age) + " " + Date;
+    }

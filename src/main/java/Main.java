@@ -31,10 +31,7 @@ class Main {
                     case 1: exercise1(); break;
                     case 2: exercise2(); break;
                     case 3: exercise3(); break;
-                    case 0: return;
-                    default: 
-                        System.out.println("Niepoprawna wartość, spróbuj ponownie.");
-                        break;
+                    default: return;
                 }
             } catch (IOException e) {
                 System.out.println("Input/output error occurred.");
@@ -44,6 +41,8 @@ class Main {
                 System.out.println("Błędny wiek studenta!");
             } catch (WrongDateOfBirth e) {
                 System.out.println("Błędna data urodzenia!");
+            } catch (ParseError e) {
+                System.out.println("Błąd parsowania danych.");
             }
         }
     }
@@ -54,10 +53,6 @@ class Main {
         System.out.println("2 - aby wypisać wszystkich studentów");
         System.out.println("3 - aby wyszukać studenta po imieniu");
         System.out.println("0 - aby wyjść z programu");
-        while (!scan.hasNextInt()) {
-            System.out.println("Niepoprawna wartość, spróbuj ponownie.");
-            scan.next(); // Clear the invalid input
-        }
         return scan.nextInt();
     }
 
@@ -105,23 +100,29 @@ class Main {
         (new Service()).addStudent(new Student(name, age, date));
     }
 
-    public static void exercise2() throws IOException {
-        var students = (new Service()).getStudents();
-        for (Student current : students) {
-            System.out.println(current.ToString());
-        }
-    }
+  public static void exercise2() throws IOException {
+      try {
+          var students = (new Service()).getStudents();
+          for (Student current : students) {
+              System.out.println(current.ToString());
+          }
+      } catch (IOException e) {
+          System.out.println("Błąd wejścia/wyjścia.");
+      } catch (ParseError e) {
+          System.out.println("Błąd parsowania danych.");
+      }
+  }
 
-    public static void exercise3() throws IOException {
-        scan.nextLine();
-        System.out.println("Podaj imie: ");
-        var name = scan.nextLine();
-        var wanted = (new Service()).findStudentByName(name);
-        if (wanted == null)
-            System.out.println("Nie znaleziono...");
-        else {
-            System.out.println("Znaleziono: ");
-            System.out.println(wanted.ToString());
-        }
-    }
+  public static void exercise3() throws IOException, ParseError {
+      scan.nextLine();
+      System.out.println("Podaj imie: ");
+      var name = scan.nextLine();
+      var wanted = (new Service()).findStudentByName(name);
+      if (wanted == null)
+          System.out.println("Nie znaleziono...");
+      else {
+          System.out.println("Znaleziono: ");
+          System.out.println(wanted.ToString());
+      }
+  }
 }
