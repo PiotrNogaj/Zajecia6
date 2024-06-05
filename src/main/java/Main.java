@@ -1,3 +1,4 @@
+
 /*
 Program sprawdza poprawność wpisywanego imienia. W przypadku wystąpienia spacji w imieniu, funkcja wyrzuca zdefiniowany wyjątek WrongStudentName, który jest wyłapywany w pętli głównej Commit6_0.
 Poniższe zadania będą się sprowadzały do modyfikacji bazowego kodu. Proces modyfikacji ogólnie może wyglądać następująco:
@@ -14,27 +15,32 @@ Poniższe zadania będą się sprowadzały do modyfikacji bazowego kodu. Proces 
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.io.IOException;
 
 class WrongStudentName extends Exception { }
+class WrongStudentAge extends Exception { }
+class WrongDateOfBirth extends Exception { }
 
 class Main {
     public static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
-        while(true) {
+        while (true) {
             try {
                 int ex = menu();
-                switch(ex) {
+                switch (ex) {
                     case 1: exercise1(); break;
                     case 2: exercise2(); break;
                     case 3: exercise3(); break;
                     default: return;
                 }
-            } catch(IOException e) {
-
-            } catch(WrongStudentName e) {
+            } catch (IOException e) {
+                System.out.println("Input/output error occurred.");
+            } catch (WrongStudentName e) {
                 System.out.println("Błędne imie studenta!");
+            } catch (WrongStudentAge e) {
+                System.out.println("Błędny wiek studenta!");
+            } catch (WrongDateOfBirth e) {
+                System.out.println("Błędna data urodzenia!");
             }
         }
     }
@@ -52,25 +58,49 @@ class Main {
         scan.nextLine();
         System.out.println("Podaj imie: ");
         String name = scan.nextLine();
-        if(name.contains(" "))
+        if (name.contains(" ") || name.matches(".*\\d.*"))
             throw new WrongStudentName();
 
         return name;
     }
 
-    public static void exercise1() throws IOException, WrongStudentName {
-        var name = ReadName();
+    public static int ReadAge() throws WrongStudentAge {
         System.out.println("Podaj wiek: ");
-        var age = scan.nextInt();
+        String ageStr = scan.next();
+        if (!ageStr.matches("\\d+") || Integer.parseInt(ageStr) <= 0 || Integer.parseInt(ageStr) > 100)
+            throw new WrongStudentAge();
+
+        return Integer.parseInt(ageStr);
+    }
+
+    public static String ReadDateOfBirth() throws WrongDateOfBirth {
         scan.nextLine();
-        System.out.println("Podaj datę urodzenia DD-MM-YYY");
-        var date = scan.nextLine();
+        System.out.println("Podaj datę urodzenia DD-MM-YYYY: ");
+        String date = scan.nextLine();
+        if (!date.matches("\\d{2}-\\d{2}-\\d{4}"))
+            throw new WrongDateOfBirth();
+
+        String[] parts = date.split("-");
+        int day = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+        int year = Integer.parseInt(parts[2]);
+
+        if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > 2024)
+            throw new WrongDateOfBirth();
+
+        return date;
+    }
+
+    public static void exercise1() throws IOException, WrongStudentName, WrongStudentAge, WrongDateOfBirth {
+        var name = ReadName();
+        var age = ReadAge();
+        var date = ReadDateOfBirth();
         (new Service()).addStudent(new Student(name, age, date));
     }
 
     public static void exercise2() throws IOException {
         var students = (new Service()).getStudents();
-        for(Student current : students) {
+        for (Student current : students) {
             System.out.println(current.ToString());
         }
     }
@@ -80,7 +110,7 @@ class Main {
         System.out.println("Podaj imie: ");
         var name = scan.nextLine();
         var wanted = (new Service()).findStudentByName(name);
-        if(wanted == null)
+        if (wanted == null)
             System.out.println("Nie znaleziono...");
         else {
             System.out.println("Znaleziono: ");

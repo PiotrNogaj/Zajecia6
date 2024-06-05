@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 public class Service {
 
     public void addStudent(Student student) throws IOException {
@@ -22,7 +23,7 @@ public class Service {
         String line = "";
         while (true) {
             line = reader.readLine();
-            if(line == null)
+            if (line == null)
                 break;
             ret.add(Student.Parse(line));
         }
@@ -32,11 +33,11 @@ public class Service {
 
     public Student findStudentByName(String name) throws IOException {
         var students = this.getStudents();
-        for(Student current : students) {
-            if(current.GetName().equals(name))
+        for (Student current : students) {
+            if (current.GetName().equals(name))
                 return current;
         }
         return null;
     }
 }
-//test
+// test
