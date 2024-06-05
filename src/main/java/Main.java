@@ -31,7 +31,10 @@ class Main {
                     case 1: exercise1(); break;
                     case 2: exercise2(); break;
                     case 3: exercise3(); break;
-                    default: return;
+                    case 0: return;
+                    default: 
+                        System.out.println("Niepoprawna wartość, spróbuj ponownie.");
+                        break;
                 }
             } catch (IOException e) {
                 System.out.println("Input/output error occurred.");
@@ -51,6 +54,10 @@ class Main {
         System.out.println("2 - aby wypisać wszystkich studentów");
         System.out.println("3 - aby wyszukać studenta po imieniu");
         System.out.println("0 - aby wyjść z programu");
+        while (!scan.hasNextInt()) {
+            System.out.println("Niepoprawna wartość, spróbuj ponownie.");
+            scan.next(); // Clear the invalid input
+        }
         return scan.nextInt();
     }
 
